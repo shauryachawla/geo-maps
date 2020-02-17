@@ -1,9 +1,9 @@
 <template>
   <nav class="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
-      <a class="navbar-item" href="https://bulma.io">
+      <router-link class="navbar-item" :to="{name: 'GMap'}">
         <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28" />
-      </a>
+      </router-link>
 
       <a
         role="button"
@@ -19,18 +19,16 @@
     </div>
 
     <div id="navbarBasicExample" class="navbar-menu">
-      <div class="navbar-start">
-        
-      </div>
+      <div class="navbar-start"></div>
 
       <div class="navbar-end">
         <div class="navbar-item">
           <div class="buttons">
-            <!-- <a class="button is-primary">
+            <router-link class="button is-primary" :to="{name: 'Signup'}">
               <strong>Sign up</strong>
-            </a> -->
-            <router-link class="button is-primary" :to="{name: 'Signup'}"><strong>Sign up</strong></router-link>
-            <a class="button is-light">Log in</a>
+            </router-link>
+            <router-link :to="{name: 'Login'}" class="button is-light">Login</router-link>
+            <a class="button is-light" @click="logout">Log out</a>
           </div>
         </div>
       </div>
@@ -39,7 +37,19 @@
 </template>
 
 <script>
-export default {};
+import firebase from "firebase";
+export default {
+  methods: {
+    logout() {
+      firebase
+        .auth()
+        .signOut()
+        .then(() => {
+          this.$router.push({ name: "Login" });
+        });
+    }
+  }
+};
 </script>
 
 <style>
