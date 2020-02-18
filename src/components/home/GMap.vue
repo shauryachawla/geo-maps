@@ -24,6 +24,22 @@ export default {
         minZoom: 3,
         streetViewControl: false
       });
+      db.collection('users').get().then((users) => {
+          users.docs.forEach((user) => {
+              if(user.data().geolocation) {
+                  let marker = new google.maps.Marker({
+                      position: {
+                          lat: user.data().geolocation.lat,
+                          lng: user.data().geolocation.lng
+                      },
+                      map
+                  })
+                  marker.addListener('click', () => {
+                      this.$router.push({name: 'ViewProfile', params: {id: user.id}})
+                  })
+              }
+          })
+      })
     }
   },
   mounted() {

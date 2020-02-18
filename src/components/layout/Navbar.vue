@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar" role="navigation" aria-label="main navigation">
+  <nav class="navbar is-transparent" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
       <router-link class="navbar-item" :to="{name: 'GMap'}">
         <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28" />
@@ -24,11 +24,12 @@
       <div class="navbar-end">
         <div class="navbar-item">
           <div class="buttons">
-            <router-link class="button is-primary" :to="{name: 'Signup'}">
+            <router-link class="button is-primary" v-if="!user" :to="{name: 'Signup'}">
               <strong>Sign up</strong>
             </router-link>
-            <router-link :to="{name: 'Login'}" class="button is-light">Login</router-link>
-            <a class="button is-light" @click="logout">Log out</a>
+            <router-link :to="{name: 'Login'}" v-if="!user" class="button is-light">Login</router-link>
+            <a v-if="user" class="button is-link is-light is-medium">{{user.email}}</a>
+            <a class="button is-light" v-if="user" @click="logout">Log out</a>
           </div>
         </div>
       </div>
@@ -39,6 +40,21 @@
 <script>
 import firebase from "firebase";
 export default {
+  data() {
+    return {
+      user: null
+    };
+  },
+  created() {
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        this.user = user;
+        // console.log(user)
+      } else {
+        this.user = null;
+      }
+    });
+  },
   methods: {
     logout() {
       firebase
