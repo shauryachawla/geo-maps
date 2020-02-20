@@ -28,7 +28,12 @@
               <strong>Sign up</strong>
             </router-link>
             <router-link :to="{name: 'Login'}" v-if="!user" class="button is-light">Login</router-link>
-            <a v-if="user" class="button is-link is-light is-medium">{{user.email}}</a>
+            <router-link
+              v-if="slug"
+              :to="{name:'ViewProfile', params:{id: slug}}"
+              class="button is-link is-light is-medium"
+            >{{user.email}}</router-link>
+
             <a class="button is-light" v-if="user" @click="logout">Log out</a>
           </div>
         </div>
@@ -39,10 +44,13 @@
 
 <script>
 import firebase from "firebase";
+import db from "@/firebase/init";
+
 export default {
   data() {
     return {
-      user: null
+      user: null,
+      slug: null
     };
   },
   created() {
@@ -50,11 +58,20 @@ export default {
       if (user) {
         this.user = user;
         // console.log(user)
+        db.collection("users")
+          .where("user_id", "==", user.uid)
+          .get()
+          .then(ss => {
+            ss.forEach(sth => {
+              this.slug = sth.id;
+            });
+          });
       } else {
         this.user = null;
       }
     });
   },
+  mounted() {},
   methods: {
     logout() {
       firebase

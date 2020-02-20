@@ -7,6 +7,7 @@
 
 <script>
 import 'bulma/css/bulma.css'
+import 'bulma-divider'
 import Navbar from '@/components/layout/Navbar'
 export default {
   name: 'App',
